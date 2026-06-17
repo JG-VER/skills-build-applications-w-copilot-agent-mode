@@ -1,18 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import { connectDatabase } from './database';
 import { User } from './models/User';
 import { Team } from './models/Team';
 import { Activity } from './models/Activity';
 import { LeaderboardEntry } from './models/Leaderboard';
 import { Workout } from './models/Workout';
 
-dotenv.config();
-
 const app = express();
 const PORT = Number(process.env.PORT) || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
@@ -23,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(MONGODB_URI)
+connectDatabase()
   .then(() => {
     console.log('✓ Connected to MongoDB');
   })
