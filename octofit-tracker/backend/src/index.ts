@@ -2,12 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { User } from './models/User';
+import { Team } from './models/Team';
+import { Activity } from './models/Activity';
+import { LeaderboardEntry } from './models/Leaderboard';
+import { Workout } from './models/Workout';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit-tracker';
+const PORT = Number(process.env.PORT) || 8000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
+const codespaceName = process.env.CODESPACE_NAME;
+const baseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : `http://localhost:${PORT}`;
 
 // Middleware
 app.use(cors());
@@ -24,22 +33,67 @@ mongoose.connect(MONGODB_URI)
   });
 
 // Health Check Route
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ status: 'Backend is running', timestamp: new Date().toISOString() });
 });
 
 // API Routes
-app.get('/api', (req, res) => {
-  res.json({ message: 'OctoFit Tracker API v1.0.0' });
+app.get('/api', (_req, res) => {
+  res.json({ message: 'OctoFit Tracker API v1.0.0', baseUrl });
+});
+
+app.get('/api/users/', async (_req, res, next) => {
+  try {
+    const users = await User.find().sort({ username: 1 });
+    res.json({ resource: 'users', baseUrl, data: users });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/teams/', async (_req, res, next) => {
+  try {
+    const teams = await Team.find().sort({ weeklyPoints: -1 });
+    res.json({ resource: 'teams', baseUrl, data: teams });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/activities/', async (_req, res, next) => {
+  try {
+    const activities = await Activity.find().sort({ completedAt: -1 });
+    res.json({ resource: 'activities', baseUrl, data: activities });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/leaderboard/', async (_req, res, next) => {
+  try {
+    const leaderboard = await LeaderboardEntry.find().sort({ rank: 1 });
+    res.json({ resource: 'leaderboard', baseUrl, data: leaderboard });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/workouts/', async (_req, res, next) => {
+  try {
+    const workouts = await Workout.find().sort({ difficulty: 1, name: 1 });
+    res.json({ resource: 'workouts', baseUrl, data: workouts });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Error Handler
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${baseUrl}`);
 });
