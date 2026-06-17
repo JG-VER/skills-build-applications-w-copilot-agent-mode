@@ -8,11 +8,11 @@ import { LeaderboardEntry } from './models/Leaderboard';
 import { Workout } from './models/Workout';
 
 const app = express();
-const PORT = Number(process.env.PORT) || 8000;
+const PORT = 8000;
 const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
-  : `http://localhost:${PORT}`;
+  : 'http://localhost:8000';
 
 // Middleware
 app.use(cors());
