@@ -1,4 +1,9 @@
 import CollectionView from './CollectionView'
+import { getApiEndpoint } from '../api'
+
+const teamsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : getApiEndpoint('teams')
 
 const columns = [
   { key: 'name', label: 'Team', accessor: (team) => team.name },
@@ -11,7 +16,7 @@ const columns = [
 function Teams() {
   return (
     <CollectionView
-      resource="teams"
+      endpoint={teamsEndpoint}
       title="Teams"
       description="Team rosters, captains, and weekly momentum."
       columns={columns}

@@ -1,4 +1,9 @@
 import CollectionView from './CollectionView'
+import { getApiEndpoint } from '../api'
+
+const usersEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : getApiEndpoint('users')
 
 const columns = [
   { key: 'username', label: 'Username', accessor: (user) => user.username },
@@ -12,7 +17,7 @@ const columns = [
 function Users() {
   return (
     <CollectionView
-      resource="users"
+      endpoint={usersEndpoint}
       title="Users"
       description="Profiles, teams, and fitness goals for Octofit members."
       columns={columns}

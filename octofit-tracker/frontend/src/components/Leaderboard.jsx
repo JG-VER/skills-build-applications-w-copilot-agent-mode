@@ -1,4 +1,9 @@
 import CollectionView from './CollectionView'
+import { getApiEndpoint } from '../api'
+
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : getApiEndpoint('leaderboard')
 
 const columns = [
   { key: 'rank', label: 'Rank', accessor: (entry) => entry.rank },
@@ -11,7 +16,7 @@ const columns = [
 function Leaderboard() {
   return (
     <CollectionView
-      resource="leaderboard"
+      endpoint={leaderboardEndpoint}
       title="Leaderboard"
       description="Competitive standings across users and teams."
       columns={columns}

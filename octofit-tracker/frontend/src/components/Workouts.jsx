@@ -1,4 +1,9 @@
 import CollectionView from './CollectionView'
+import { getApiEndpoint } from '../api'
+
+const workoutsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : getApiEndpoint('workouts')
 
 const columns = [
   { key: 'name', label: 'Workout', accessor: (workout) => workout.name },
@@ -12,7 +17,7 @@ const columns = [
 function Workouts() {
   return (
     <CollectionView
-      resource="workouts"
+      endpoint={workoutsEndpoint}
       title="Workouts"
       description="Personalized workout suggestions and training focus areas."
       columns={columns}

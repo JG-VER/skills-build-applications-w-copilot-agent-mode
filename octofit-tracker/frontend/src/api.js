@@ -6,8 +6,12 @@ export const apiBaseUrl = codespaceName
 
 export const isUsingCodespaceApi = Boolean(codespaceName)
 
-export async function fetchCollection(resource) {
-  const response = await fetch(`${apiBaseUrl}/${resource}/`)
+export function getApiEndpoint(resource) {
+  return `${apiBaseUrl}/${resource}/`
+}
+
+export async function fetchCollection(endpoint) {
+  const response = await fetch(endpoint)
 
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`)

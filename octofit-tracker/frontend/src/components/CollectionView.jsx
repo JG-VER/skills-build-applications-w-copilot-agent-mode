@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchCollection } from '../api'
 
-function CollectionView({ resource, title, description, columns, renderCard }) {
+function CollectionView({ endpoint, title, description, columns, renderCard }) {
   const [items, setItems] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
@@ -12,7 +12,7 @@ function CollectionView({ resource, title, description, columns, renderCard }) {
     async function loadItems() {
       try {
         setStatus('loading')
-        const nextItems = await fetchCollection(resource)
+        const nextItems = await fetchCollection(endpoint)
 
         if (isMounted) {
           setItems(nextItems)
@@ -31,7 +31,7 @@ function CollectionView({ resource, title, description, columns, renderCard }) {
     return () => {
       isMounted = false
     }
-  }, [resource])
+  }, [endpoint])
 
   return (
     <section className="content-section">
