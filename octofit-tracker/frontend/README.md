@@ -1,4 +1,22 @@
-# React + TypeScript + Vite
+# Octofit Tracker Frontend
+
+React 19 presentation tier for the Octofit Tracker multi-tier application.
+
+## Environment
+
+Define `VITE_CODESPACE_NAME` before running the Vite app in a Codespace. A local `.env.local` file is a convenient place to set it:
+
+```env
+VITE_CODESPACE_NAME=your-codespace-name
+```
+
+The frontend builds API URLs with Vite environment variables through `import.meta.env`:
+
+```js
+https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/[component]/
+```
+
+If `VITE_CODESPACE_NAME` is unset, the app falls back to `http://localhost:8000/api` so it never requests `https://undefined-8000.app.github.dev`.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
